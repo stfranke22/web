@@ -23,6 +23,7 @@ config = {
     "acceptance": {
         "webUI": {
             "type": FULL,
+            "debugSuites": ["webUIFilesList"],
             "suites": {
                 "oC10Basic": [
                     "webUIAccount",
@@ -143,6 +144,7 @@ config = {
         },
         "webUINotification": {
             "type": NOTIFICATIONS,
+            "skip": True,
             "suites": {
                 "oC10NotificationBasic": [
                     "webUINotifications",
@@ -162,6 +164,7 @@ config = {
         },
         "webUIFederation": {
             "type": FEDERATED,
+            "skip": True,
             "suites": {
                 "webUISharingExternal": "oC10SharingExternal",
                 "webUISharingExternalToRoot": "oC10SharingExternalRoot",
@@ -176,6 +179,7 @@ config = {
         },
         "webUI-XGA-Notifications": {
             "type": NOTIFICATIONS,
+            "skip": True,
             "suites": {
                 "oC10XGAPortraitNotifications": [
                     "webUINotifications",
@@ -192,6 +196,7 @@ config = {
         },
         "webUI-XGA": {
             "type": FULL,
+            "skip": True,
             "suites": {
                 "oC10XGAPortrait1": [
                     "webUIAccount",
@@ -271,6 +276,7 @@ config = {
         },
         "webUI-Notifications-iPhone": {
             "type": NOTIFICATIONS,
+            "skip": True,
             "suites": {
                 "oC10iPhoneNotifications": [
                     "webUINotifications",
@@ -287,6 +293,7 @@ config = {
         },
         "webUI-iPhone": {
             "type": FULL,
+            "skip": True,
             "suites": {
                 "oC10iPhone1": [
                     "webUIAccount",
@@ -366,6 +373,7 @@ config = {
         },
         "webUI-ocis": {
             "type": FULL,
+            "debugSuites": {"webUIOCISFilesList": "webUIFilesList"},
             "suites": {
                 "oCISBasic": [
                     "webUILogin",
@@ -1152,7 +1160,7 @@ def acceptance(ctx):
                         else:
                             steps += buildWeb()
 
-                        services = browserService(alternateSuiteName, browser)
+                        services = browserService(alternateSuiteName, browser) + middlewareService(params["runningOnOCIS"])
 
                         if (params["runningOnOCIS"]):
                             # Services and steps required for running tests with oCIS
@@ -2162,6 +2170,7 @@ def runWebuiAcceptanceTests(suite, alternateSuiteName, filterTags, extraEnvironm
     environment["SERVER_HOST"] = "http://web"
     environment["BACKEND_HOST"] = "http://owncloud"
     environment["COMMENTS_FILE"] = "/var/www/owncloud/web/comments.file"
+    environment["MIDDLEWARE_HOST"] = "http://middleware:3000"
 
     for env in extraEnvironment:
         environment[env] = extraEnvironment[env]
@@ -2644,6 +2653,22 @@ def checkStarlark():
                 "refs/pull/**",
             ],
         },
+    }]
+
+def middlewareService(ocis = False):
+    return [{
+        "name": "middleware",
+        "image": "dpakach/owncloud-test-middleware",
+        "pull": "always",
+        "environment": {
+            "BACKEND_HOST": "https://ocis:9200" if ocis else "http://owncloud",
+            "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/storage/owncloud/",
+            "RUN_ON_OCIS": "true" if ocis else "false",
+        },
+        "volumes": [{
+            "name": "gopath",
+            "path": "/srv/app",
+        }],
     }]
 
 def dependsOn(earlierStages, nextStages):
