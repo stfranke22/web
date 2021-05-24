@@ -2664,6 +2664,7 @@ def middlewareService(ocis = False):
             "BACKEND_HOST": "https://ocis:9200" if ocis else "http://owncloud",
             "OCIS_REVA_DATA_ROOT": "/srv/app/tmp/ocis/storage/owncloud/",
             "RUN_ON_OCIS": "true" if ocis else "false",
+            "HOST": "middleware",
         },
         "volumes": [{
             "name": "gopath",

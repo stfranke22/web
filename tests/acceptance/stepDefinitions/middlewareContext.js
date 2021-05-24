@@ -2,7 +2,8 @@ const { After, Before, Given } = require('cucumber')
 const fetch = require('node-fetch')
 const path = require('path')
 
-const middlewareUrl = process.env.MIDDLEWARE_HOST
+const middlewareHost = process.env.MIDDLEWARE_HOST
+const middlewareUrl = 'http://' + path.join(middlewareHost, '/')
 
 function handler(statement1, statement2) {
   let statement = ''
@@ -18,7 +19,7 @@ function handler(statement1, statement2) {
     statement = statement + statement2.trim()
   }
 
-  return fetch(path.join(middlewareUrl, 'execute'), {
+  return fetch(middlewareUrl + 'execute', {
     method: 'POST',
     body: JSON.stringify({ step: 'Given ' + statement }),
     headers: {
@@ -40,8 +41,8 @@ function handler(statement1, statement2) {
 }
 
 Before(function() {
-  console.log(path.join(middlewareUrl, 'init'))
-  return fetch(path.join(middlewareUrl, 'init'), {
+  console.log(middlewareUrl + 'init')
+  return fetch(middlewareUrl + 'init', {
     method: 'POST'
   })
     .then(res => {
@@ -55,7 +56,7 @@ Before(function() {
 })
 
 After(function() {
-  return fetch(path.join(middlewareUrl, 'cleanup'), {
+  return fetch(middlewareUrl + 'cleanup', {
     method: 'POST'
   })
 })
