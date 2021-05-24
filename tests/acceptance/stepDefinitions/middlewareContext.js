@@ -62,5 +62,3 @@ After(function() {
 })
 
 Given(/^(.*)in the server(.*)$/, handler)
-
-// Then(/^(.*)in the server(.*)$/, handler)

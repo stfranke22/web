@@ -198,11 +198,8 @@ config = {
             "type": FULL,
             "skip": True,
             "suites": {
-                "oC10XGAPortrait1": [
                     "webUIAccount",
                     "webUICreateFilesFolders",
-                    "webUIDeleteFilesFolders",
-                    "webUIFavorites",
                     "webUIFiles",
                     "webUIFilesActionMenu",
                     "webUIFilesCopy",
@@ -374,9 +371,6 @@ config = {
         "webUI-ocis": {
             "type": FULL,
             "debugSuites": {"webUIOCISFilesList": "webUIFilesList"},
-            "suites": {
-                "oCISBasic": [
-                    "webUILogin",
                     "webUINotifications",
                     "webUIPrivateLinks",
                     "webUIPreview",
@@ -2670,7 +2664,7 @@ def middlewareService(ocis = False):
         "volumes": [{
             "name": "uploads",
             "path": "/filesForUpload",
-        },{
+        }, {
             "name": "gopath",
             "path": "/srv/app",
         }],
