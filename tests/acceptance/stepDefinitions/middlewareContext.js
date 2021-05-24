@@ -2,7 +2,7 @@ const { After, Before, Given } = require('cucumber')
 const fetch = require('node-fetch')
 const path = require('path')
 
-const middlewareHost = process.env.MIDDLEWARE_HOST
+const middlewareHost = process.env.MIDDLEWARE_HOST || 'localhost:3000'
 const middlewareUrl = 'http://' + path.join(middlewareHost, '/')
 
 function handler(statement1, statement2) {

@@ -2660,6 +2660,7 @@ def middlewareService(ocis = False):
             "RUN_ON_OCIS": "true" if ocis else "false",
             "HOST": "middleware",
             "REMOTE_UPLOAD_DIR": "/filesForUpload",
+            "NODE_TLS_REJECT_UNAUTHORIZED": "0",
         },
         "volumes": [{
             "name": "uploads",
