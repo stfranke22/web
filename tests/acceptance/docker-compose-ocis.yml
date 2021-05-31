@@ -3,23 +3,27 @@ version: '3.5'
 services:
   selenium:
     image: selenium/standalone-chrome-debug
-    network_mode: 'host'
+    network_mode: "host"
+    ports:
+      - "4444:4444"
     env_file:
-      - ./test.env
+      - ./test.ocis.env
     volumes:
       - /dev/shm:/dev/shm
       - ./filesForUpload:/uploads
 
   middleware:
     image: dpakach/owncloud-test-middleware:latest
-    network_mode: 'host'
+    network_mode: "host"
+    ports:
+      - "3000:3000"
     env_file:
-      - ./test.env
+      - ./test.ocis.env
     volumes:
       - /var/tmp/ocis:/var/tmp/ocis
       - ./filesForUpload:/usr/src/app/filesForUpload
     environment:
-      BACKEND_HOST: ${OCIS_BACKEND:-https://localhost:9200}
-      REMOTE_BACKEND_HOST: ${OCIS_REMOTE_BACKEND:-https://localhost:8200}
+      PORT: 3000
+      HOST: "0.0.0.0"
       RUN_ON_OCIS: 'true'
       NODE_TLS_REJECT_UNAUTHORIZED: '0'

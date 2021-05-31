@@ -52,4 +52,4 @@ tests/report/cucumber_report.json
 tests/report/cucumber_report.html
 
 # test env file
-/tests/acceptance/test.env
+/tests/acceptance/test.*.env

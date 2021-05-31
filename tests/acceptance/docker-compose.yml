@@ -4,8 +4,10 @@ services:
   selenium:
     image: selenium/standalone-chrome-debug
     network_mode: 'host'
+    ports:
+      - "4444:4444"
     env_file:
-      - ./test.env
+      - ./test.oc10.env
     volumes:
       - /dev/shm:/dev/shm
       - ./filesForUpload:/uploads
@@ -14,12 +16,14 @@ services:
     image: dpakach/owncloud-test-middleware:latest
     network_mode: 'host'
     env_file:
-      - ./test.env
+      - ./test.oc10.env
+    ports:
+      - "3000:3000"
     volumes:
       - /var/tmp/ocis:/var/tmp/ocis
       - ./filesForUpload:/usr/src/app/filesForUpload
     environment:
-      BACKEND_HOST: ${OC10_BACKEND:-http://localhost/core}
-      REMOTE_BACKEND_HOST: ${OC10_REMOTE_BACKEND:-http://localhost/fed}
+      PORT: 3000
+      HOST: "0.0.0.0"
       RUN_ON_OCIS: 'false'
       NODE_TLS_REJECT_UNAUTHORIZED: '0'
