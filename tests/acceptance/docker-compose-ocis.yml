@@ -23,7 +23,7 @@ services:
       - /var/tmp/ocis:/var/tmp/ocis
       - ./filesForUpload:/usr/src/app/filesForUpload
     environment:
-      PORT: 3000
-      HOST: "0.0.0.0"
+      MIDDLEWARE_PORT: 3000
+      MIDDLEWARE_HOST: "0.0.0.0"
       RUN_ON_OCIS: 'true'
       NODE_TLS_REJECT_UNAUTHORIZED: '0'
