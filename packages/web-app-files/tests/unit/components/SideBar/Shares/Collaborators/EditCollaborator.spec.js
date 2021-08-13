@@ -162,33 +162,6 @@ describe('Edit Collaborator', () => {
   })
 })
 
-function getResource({ filename = 'testFile', extension = 'txt', type = 'file', owner = 'user0' }) {
-  return {
-    id: '4',
-    fileId: '4',
-    icon: type,
-    name: type === 'file' ? `${filename}.${extension}` : filename,
-    extension: extension,
-    path: type === 'file' ? `/${filename}.${extension}` : `/${filename}`,
-    type,
-    mdate: 'Mon, 12 Jul 2021 11:04:33 GMT',
-    size: '163',
-    indicators: [],
-    permissions: 'RDNVW',
-    starred: false,
-    etag: '"89128c0e8122002db57bd19c9ec33004"',
-    shareTypes: [],
-    downloadURL: '',
-    ownerDisplayName: displayNames[owner],
-    ownerId: owner,
-    canDownload: () => true,
-    isReceivedShare: () => true,
-    canBeDeleted: () => true,
-    canRename: () => true,
-    canShare: () => true
-  }
-}
-
 const buildCollaboratorsArray = (collaborator, idx) => {
   let {
     username,
@@ -231,7 +204,7 @@ const storeOptions = data => {
         namespaced: true,
         getters: {
           highlightedFile: () => {
-            return getResource({ filename: 'testfile', extension: 'jpg', type: 'file' })
+            return { type: 'file' }
           }
         },
         actions: {

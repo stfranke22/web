@@ -42,7 +42,7 @@ describe('Collaborator Edit Options', () => {
       expect(roleLabel.text()).toBe('Role')
     })
 
-    it('should render default role in the select input without existing Role', () => {
+    it('should render default role in the select input if no value is set to the role prop', () => {
       const wrapper = getMountedWrapper({
         user: 'user0'
       })
@@ -107,7 +107,7 @@ describe('Collaborator Edit Options', () => {
       expect(expireDate.exists()).toBeFalsy()
     })
 
-    it('should render expiration date picker when expiration date enabled', () => {
+    it('should render expiration date picker when the expiration date is enabled', () => {
       const wrapper = getShallowMountedWrapper({
         user: 'user0'
       })
@@ -125,7 +125,7 @@ describe('Collaborator Edit Options', () => {
       })
     })
 
-    it('should set datepicker when expiration date is enforced', () => {
+    it('should set date field as required when expiration date is enforced', () => {
       const wrapper = getShallowMountedWrapper({
         user: 'user0',
         shareCapabilities: {
@@ -161,7 +161,7 @@ describe('Collaborator Edit Options', () => {
       })
     })
 
-    it('should set the expiration date according to the prop', () => {
+    it('should set the expiration date according to the expirationDate prop passed to the component', () => {
       const expirationDate = new Date()
       // set expiration date 10 days into the future
       expirationDate.setDate(expirationDate.getDate() + 10)
@@ -188,32 +188,6 @@ describe('Collaborator Edit Options', () => {
     })
   })
 })
-
-function getResource({ filename = 'testFile', extension = 'txt', type = 'file', owner = 'user0' }) {
-  return {
-    id: '4',
-    fileId: '4',
-    icon: type,
-    name: type === 'file' ? `${filename}.${extension}` : filename,
-    extension: extension,
-    path: type === 'file' ? `/${filename}.${extension}` : `/${filename}`,
-    type,
-    mdate: 'Mon, 12 Jul 2021 11:04:33 GMT',
-    size: '163',
-    indicators: [],
-    permissions: 'RDNVW',
-    starred: false,
-    etag: '"89128c0e8122002db57bd19c9ec33004"',
-    shareTypes: [],
-    ownerDisplayName: displayNames[owner],
-    ownerId: owner,
-    canDownload: () => true,
-    isReceivedShare: () => true,
-    canBeDeleted: () => true,
-    canRename: () => true,
-    canShare: () => true
-  }
-}
 
 const storeOptions = data => {
   let { user, owner, shareCapabilities } = data
@@ -247,7 +221,7 @@ const storeOptions = data => {
         namespaced: true,
         getters: {
           highlightedFile: () => {
-            return getResource({ filename: 'testfile', extension: 'jpg', type: 'file', owner })
+            return { type: 'file' }
           }
         }
       }
