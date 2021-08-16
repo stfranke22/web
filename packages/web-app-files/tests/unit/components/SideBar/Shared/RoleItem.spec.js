@@ -6,8 +6,8 @@ const localVue = createLocalVue()
 
 const selectors = {
   roleItem: '.roles-select-role-item',
-  roleLabel: '.roles-select-role-item .oc-text-bold',
-  roleDescription: '.roles-select-role-item .oc-m-rm'
+  roleLabel: '.roles-select-role-item-label',
+  roleDescription: '.roles-select-role-item-description'
 }
 
 const filesPersonalRoute = { name: 'files-personal' }

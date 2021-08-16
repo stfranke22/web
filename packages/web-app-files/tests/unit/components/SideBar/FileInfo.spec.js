@@ -125,7 +125,7 @@ describe('SideBar', () => {
 })
 
 function getResource({ filename, extension, type }) {
-  // convert date from 2 daays ago to format 'Mon, 12 Jul 2021 11:04:33 GMT'
+  // convert date from 2 days ago to format 'Mon, 12 Jul 2021 11:04:33 GMT'
   const d = new Date()
   d.setDate(d.getDate() - 2)
   const mdate = d.toGMTString()

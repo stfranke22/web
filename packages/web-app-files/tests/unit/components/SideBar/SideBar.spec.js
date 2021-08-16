@@ -109,56 +109,47 @@ describe('SideBar', () => {
       jest.clearAllMocks()
     })
 
-    it('should show fileinfo on all panels', () => {
-      const expectedPanels = ['Details', 'Actions', 'People']
+    const allPanels = ['Details', 'Actions', 'People']
+    const nonDefaultPanels = ['Actions', 'People']
 
-      for (const expectedPanel of expectedPanels) {
-        const wrapper = getWrapper(filesPersonalRoute, {
-          filename: 'testfile',
-          extension: 'jpg'
-        })
+    it.each(allPanels)('should show fileinfo on all panels', expectedPanel => {
+      const wrapper = getWrapper(filesPersonalRoute, {
+        filename: 'testfile',
+        extension: 'jpg'
+      })
 
-        const panel = wrapper.find(panels[expectedPanel].selector)
-        expect(panel.exists()).toBeTruthy()
+      const panel = wrapper.find(panels[expectedPanel].selector)
+      expect(panel.exists()).toBeTruthy()
 
-        const fileInfo = panel.find(selectors.fileInfo)
-        expect(fileInfo.exists()).toBeTruthy()
-      }
+      const fileInfo = panel.find(selectors.fileInfo)
+      expect(fileInfo.exists()).toBeTruthy()
     })
 
-    it('should not show navigation on default panels', () => {
-      const expectedPanels = ['Actions', 'People']
+    it.each(nonDefaultPanels)('should not show navigation on non default panels', expectedPanel => {
+      const wrapper = getWrapper(filesPersonalRoute, {
+        filename: 'testfile',
+        extension: 'jpg'
+      })
 
-      for (const expectedPanel of expectedPanels) {
-        const wrapper = getWrapper(filesPersonalRoute, {
-          filename: 'testfile',
-          extension: 'jpg'
-        })
+      const panel = wrapper.find(panels[expectedPanel].selector)
+      expect(panel.exists()).toBeTruthy()
 
-        const panel = wrapper.find(panels[expectedPanel].selector)
-        expect(panel.exists()).toBeTruthy()
-
-        const navigation = panel.find(selectors.panelNavigation)
-        expect(navigation.exists()).toBeFalsy()
-      }
+      const navigation = panel.find(selectors.panelNavigation)
+      expect(navigation.exists()).toBeFalsy()
     })
 
-    it('should show empty body for non-default panels', () => {
-      const expectedPanels = ['Actions', 'People']
+    it.each(nonDefaultPanels)('should show empty body for non-default panels', expectedPanel => {
+      const wrapper = getWrapper(filesPersonalRoute, {
+        filename: 'testfile',
+        extension: 'jpg'
+      })
 
-      for (const expectedPanel of expectedPanels) {
-        const wrapper = getWrapper(filesPersonalRoute, {
-          filename: 'testfile',
-          extension: 'jpg'
-        })
+      const panel = wrapper.find(panels[expectedPanel].selector)
+      expect(panel.exists()).toBeTruthy()
 
-        const panel = wrapper.find(panels[expectedPanel].selector)
-        expect(panel.exists()).toBeTruthy()
-
-        const body = panel.find(selectors.panelBody)
-        expect(body.exists()).toBeTruthy()
-        expect(body.text()).toBe('')
-      }
+      const body = panel.find(selectors.panelBody)
+      expect(body.exists()).toBeTruthy()
+      expect(body.text()).toBe('')
     })
 
     it('should show the body of default panel', () => {
