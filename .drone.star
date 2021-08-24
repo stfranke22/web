@@ -1143,7 +1143,7 @@ def acceptance(ctx):
                         steps = []
 
                         if (params["earlyFail"]):
-                            steps += calculateDiffContainsUnitTestsOnly(ctx)
+                            steps += calculateTestsToRunBasedOnFilesChanged(ctx)
 
                         steps += installNPM()
 
@@ -1531,7 +1531,7 @@ def installCore(version, db):
         stepDefinition.update({"commands": [
             ". %s/.drone.env" % dir["web"],
             "export PLUGIN_GIT_REFERENCE=$CORE_COMMITID",
-            "if test -f runUnitTestsOnly; then echo 'skipping installCore'; else bash /usr/sbin/plugin.sh; fi",
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'skipping installCore'; else bash /usr/sbin/plugin.sh; fi",
         ]})
 
     return [stepDefinition]
@@ -1578,7 +1578,7 @@ def installFederatedServer(version, db, dbSuffix = "-federated"):
         stepDefinition.update({"commands": [
             ". %s/.drone.env" % dir["web"],
             "export PLUGIN_GIT_REFERENCE=$CORE_COMMITID",
-            "if test -f runUnitTestsOnly; then echo 'skipping installFederatedServer'; else bash /usr/sbin/plugin.sh; fi",
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'skipping installFederatedServer'; else bash /usr/sbin/plugin.sh; fi",
         ]})
 
     return [stepDefinition]
@@ -1589,7 +1589,7 @@ def installNPM():
         "image": "owncloudci/nodejs:14",
         "pull": "always",
         "commands": [
-            "if test -f runUnitTestsOnly; then echo 'skipping installNPM'; else yarn install --frozen-lockfile; fi",
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'skipping installNPM'; else yarn install --frozen-lockfile; fi",
         ],
     }]
 
@@ -1813,7 +1813,7 @@ def getSkeletonFiles():
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "if test -f runUnitTestsOnly; then echo 'installNPM getSkeletonFiles'; else git clone https://github.com/owncloud/testing.git /srv/app/testing; fi",
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'installNPM getSkeletonFiles'; else git clone https://github.com/owncloud/testing.git /srv/app/testing; fi",
         ],
         "volumes": [{
             "name": "gopath",
@@ -2080,7 +2080,7 @@ def fixPermissions():
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "if test -f runUnitTestsOnly; then echo 'skipping fixPermissions'; else cd %s && chown www-data * -R; fi" % dir["server"],
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'skipping fixPermissions'; else cd %s && chown www-data * -R; fi" % dir["server"],
         ],
     }]
 
@@ -2090,7 +2090,7 @@ def fixPermissionsFederated():
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "if test -f runUnitTestsOnly; then echo 'skipping fixPermissions'; else cd %s && chown www-data * -R; fi" % dir["federated"],
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'skipping fixPermissions'; else cd %s && chown www-data * -R; fi" % dir["federated"],
         ],
     }]
 
@@ -2172,7 +2172,7 @@ def runWebuiAcceptanceTests(suite, alternateSuiteName, filterTags, extraEnvironm
         "pull": "always",
         "environment": environment,
         "commands": [
-            "if test -f runUnitTestsOnly; then echo 'skipping webui-acceptance-tests'; else cd %s && ./tests/acceptance/run.sh; fi" % dir["web"],
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'skipping webui-acceptance-tests'; else cd %s && ./tests/acceptance/run.sh; fi" % dir["web"],
         ],
         "volumes": [{
             "name": "gopath",
@@ -2276,7 +2276,7 @@ def listRemoteCache():
             },
         },
         "commands": [
-            "if test -f runUnitTestsOnly; then echo 'skipping list-ocis-bin-cache'; else mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY && mc find s3/owncloud/web/ocis-build; fi",
+            "if [ test -f runUnitTestsOnly ] || [ test -f run runTestsForDocsChangeOnly ]; then echo 'skipping list-ocis-bin-cache'; else mc alias set s3 $MC_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY && mc find s3/owncloud/web/ocis-build; fi",
         ],
     }]
 
@@ -2654,7 +2654,7 @@ def dependsOn(earlierStages, nextStages):
             else:
                 nextStage["depends_on"] = [earlierStage["name"]]
 
-def calculateDiffContainsUnitTestsOnly(ctx):
+def calculateTestsToRunBasedOnFilesChanged(ctx):
     return [
         {
             "name": "calculate-diff",

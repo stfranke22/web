@@ -10,3 +10,5 @@ geekdocCollapseSection: true
 
 This is the next generation ownCloud frontend. 
 If you're new here, head over to the the [getting started guide]({{< ref "getting-started.md" >}}) for a quick introduction.
+
+[comment]: <> (This is just for tests)
