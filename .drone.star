@@ -2661,7 +2661,7 @@ def calculateDiffContainsUnitTestsOnly(ctx):
             "image": "owncloudci/nodejs:14",
             "pull": "always",
             "commands": [
-                "bash -x tests/drone/if-diff-has-unit-tests-only.sh",
+                "bash -x tests/drone/getFilesChanged.sh",
                 "ls -la",
             ],
             "when": {
