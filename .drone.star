@@ -1010,9 +1010,11 @@ def unitTests(ctx):
                      "name": "clone",
                      "image": "owncloudci/alpine:latest",
                      "commands": [
-                         "if test -f runTestsForDocsChangeOnly; then echo 'skipping clone'; else git clone https://github.com/%s.git . && git checkout $DRONE_COMMIT; fi" % (repo_slug),
+                         "git clone https://github.com/%s.git ." % (repo_slug),
+                         "git checkout $DRONE_COMMIT",
                      ],
                  }] +
+                 calculateTestsToRunBasedOnFilesChanged(ctx) +
                  installNPM() +
                  buildWeb() +
                  [

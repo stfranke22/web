@@ -30,19 +30,19 @@ done
 
 if [ ! "${DIFF}" ]
 then
-	echo "no any files are changed"
+	echo "no files are changed"
 elif [ $CHANGED_UNIT_TESTS_ONLY == "True" ]
 then
 	echo "only unit tests files are changed"
 	touch runUnitTestsOnly
 elif [ $CHANGED_DOCS_ONLY == "True" ]
 then
-	echo "only unit tests files are changed"
+	echo "only docs files are changed"
 	touch runTestsForDocsChangeOnly
 elif [ $CHANGED_UNIT_TESTS_AND_DOCS_ONLY == "True" ]
 then
-	echo "only unit tests files are changed"
+	echo "only unit tests files and docs files are changed"
 	touch runUnitTestsOnly
 else
-	echo "files other than unit tests files are also changed"
+	echo "files other than unit tests files and docs files are also changed"
 fi
