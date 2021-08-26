@@ -26,21 +26,25 @@ function getWrapper(route, role) {
 }
 
 describe('RoleItem', () => {
-  it('should show role name, label and description', () => {
-    const role = {
-      id: 'dfdd3eddde',
-      label: 'Viewer',
-      description: 'Download, Preview and Share'
-    }
-    const wrapper = getWrapper(filesPersonalRoute, role)
+  const role = {
+    id: 'dfdd3eddde',
+    label: 'Viewer',
+    description: 'Download, Preview and Share'
+  }
+  const wrapper = getWrapper(filesPersonalRoute, role)
 
+  it('should show the roleItem', () => {
     const roleItem = wrapper.find(selectors.roleItem)
     expect(roleItem.exists()).toBeTruthy()
+  })
 
+  it('should show role label', () => {
     const roleLabel = wrapper.find(selectors.roleLabel)
     expect(roleLabel.exists()).toBeTruthy()
     expect(roleLabel.text()).toBe('Viewer')
+  })
 
+  it('should show role description', () => {
     const roleDescription = wrapper.find(selectors.roleDescription)
     expect(roleDescription.exists()).toBeTruthy()
     expect(roleDescription.text()).toBe('Download, Preview and Share')

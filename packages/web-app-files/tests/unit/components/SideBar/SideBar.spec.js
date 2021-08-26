@@ -17,21 +17,6 @@ localVue.use(GetTextPlugin, {
 
 const filesPersonalRoute = { name: 'files-personal' }
 
-const getSideBarComponent = function(name) {
-  const component = localVue.component(name + '-sidebar-item', {
-    render: function(createElement) {
-      return createElement('div', name + ' content')
-    }
-  })
-  component.title = () => name
-  component.data = () => {
-    return {
-      loading: false
-    }
-  }
-  return component
-}
-
 const sideBars = [
   () => {
     return {
@@ -178,13 +163,15 @@ describe('SideBar', () => {
       const navigation = panel.find(selectors.panelNavigation)
       expect(navigation.exists()).toBeTruthy()
 
-      const navigationButtons = panel.findAll(selectors.panelNavigationButton)
-      expect(navigationButtons.length).toBe(2)
+      // Only non default panels have nav buttons
+      const expectedNavItems = Object.keys(panels).filter(p => !panels[p].default)
 
-      const navigationItems = ['Actions', 'People']
-      for (let i = 0; i < 2; i++) {
+      const navigationButtons = panel.findAll(selectors.panelNavigationButton)
+      expect(navigationButtons.length).toBe(expectedNavItems.length)
+
+      for (let i = 0; i < expectedNavItems.length; i++) {
         const buttonName = navigationButtons.at(i).text()
-        expect(navigationItems).toContain(buttonName)
+        expect(expectedNavItems).toContain(buttonName)
       }
     })
 
@@ -255,6 +242,21 @@ function getResource({ filename, extension, type }) {
   }
 }
 
+const getSideBarComponent = function(name) {
+  const component = localVue.component(name + '-sidebar-item', {
+    render: function(createElement) {
+      return createElement('div', name + ' content')
+    }
+  })
+  component.title = () => name
+  component.data = () => {
+    return {
+      loading: false
+    }
+  }
+  return component
+}
+
 function createStore(state, filename, extension, type = 'file') {
   return new Vuex.Store({
     modules: {
@@ -269,7 +271,8 @@ function createStore(state, filename, extension, type = 'file') {
             return getResource({ filename, extension, type })
           },
           currentFolder: () => '/',
-          versions: () => []
+          versions: () => [],
+          selectedFiles: () => []
         },
         actions: {
           markFavorite: jest.fn()

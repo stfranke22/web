@@ -77,7 +77,7 @@ describe('SideBar', () => {
       expect(favoritesButton.exists()).toBeFalsy()
     })
 
-    it('should allow user to favorite a resource', async () => {
+    it('should call the favorite trigger when button is clicked', async () => {
       const wrapper = getWrapper(filesPersonalRoute, {
         filename: 'testfile',
         extension: 'jpg'
@@ -88,22 +88,6 @@ describe('SideBar', () => {
       const favoritesButton = wrapper.find(selectors.favoritesButton)
       await favoritesButton.trigger('click.native.stop')
       expect(favoriteTrigger).toHaveBeenCalledTimes(1)
-      const args = favoriteTrigger.mock.calls[0]
-      expect(args.length).toBe(1)
-      expect(args[0]).toMatchObject({
-        client: undefined,
-        file: {
-          id: '4',
-          fileId: '4',
-          icon: 'file',
-          name: 'testfile.jpg',
-          extension: 'jpg',
-          path: '/testfile.jpg',
-          type: 'file',
-          ownerDisplayName: 'user1',
-          ownerId: 'user1'
-        }
-      })
     })
 
     it('should show file size and modified date', () => {
