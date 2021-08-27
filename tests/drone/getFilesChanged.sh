@@ -2,47 +2,46 @@
 
 CHANGED_UNIT_TESTS_ONLY=True
 CHANGED_DOCS_ONLY=True
-CHANGED_UNIT_TESTS_AND_DOCS_ONLY = True
+CHANGED_UNIT_TESTS_AND_DOCS_ONLY=True
 
 DIFFS=$(git diff origin/master --name-only)
+DOCS_ONLY_CHANGES=$(echo $DIFFS | grep -E '(docs/.*|changelog/.*)')
+UNIT_TESTS_CHANGES=$(echo $DIFFS | grep 'packages/.*/tests/.*')
+DOCS_AND_UNIT_TESTS_ONLY_CHANGES=$(echo $DIFFS | grep -E '(docs/.*|changelog/.*|packages/.*/tests/.*)')
 
-for DIFF in ${DIFFS}
-do
-	if ! echo "${DIFF}" | grep 'packages/.*/tests/.*'
-	then
-		CHANGED_UNIT_TESTS_ONLY=False
-		break
-	fi
-	if ! echo "${DIFF}" | grep -E '(docs/.*|changelog/.*)'
-	then
-		CHANGED_DOCS_ONLY=False
-		break
-	fi
-	if [ $CHANGED_UNIT_TESTS_ONLY == "False" && $CHANGED_DOCS_ONLY == "False" ]
-	then
-	 if ! echo "${DIFF}" | grep -E '(docs/.*|changelog/.*|packages/.*/tests/.*)'
-	 then
-		 CHANGED_UNIT_TESTS_AND_DOCS_ONLY=False
-		 break
-	 fi
-	fi
-done
+changesExceptDocsChanges=$(echo ${DIFFS[@]} ${DOCS_ONLY_CHANGES[@]} | tr ' ' '\n' | sort | uniq -u)
+changesExceptUnitTestsChanges=$(echo ${DIFFS[@]} ${UNIT_TESTS_CHANGES[@]} | tr ' ' '\n' | sort | uniq -u)
+changesExceptUnitTestsAndDocsChanges=$(echo ${DIFFS[@]} ${DOCS_AND_UNIT_TESTS_ONLY_CHANGES[@]} | tr ' ' '\n' | sort | uniq -u)
 
-if [ ! "${DIFF}" ]
-then
-	echo "no files are changed"
-elif [ $CHANGED_UNIT_TESTS_ONLY == "True" ]
-then
-	echo "only unit tests files are changed"
-	touch runUnitTestsOnly
-elif [ $CHANGED_DOCS_ONLY == "True" ]
-then
-	echo "only docs files are changed"
-	touch runTestsForDocsChangeOnly
-elif [ $CHANGED_UNIT_TESTS_AND_DOCS_ONLY == "True" ]
-then
-	echo "only unit tests files and docs files are changed"
-	touch runUnitTestsOnly
+if ((${#DIFFS})); then
+ if ((${#changesExceptUnitTestsAndDocsChanges})); then
+   echo "FILES OTHER THAN UNIT TESTS AND DOCS ARE ALSO CHANGED"
+   CHANGED_UNIT_TESTS_AND_DOCS_ONLY=False
+   CHANGED_UNIT_TESTS_ONLY=False
+   CHANGED_DOCS_ONLY=False
+ else
+   if ((${#changesExceptDocsChanges})); then
+      echo "FILES OTHER THAN DOCS FILES ARE ALSO CHANGED"
+      CHANGED_DOCS_ONLY=False
+   elif ((${#changesExceptUnitTestsChanges})); then
+      echo "FILES OTHER THAN UNIT TEST FILES ARE ALSO CHANGED"
+      CHANGED_UNIT_TESTS_ONLY=False
+    fi
+  fi
+
+ if [ $CHANGED_UNIT_TESTS_ONLY == "True" ]
+  then
+  	echo "ONLY UNIT TEST FILES ARE CHANGED"
+  	touch runUnitTestsOnly
+  elif [ $CHANGED_DOCS_ONLY == "True" ]
+  then
+  	echo "ONLY DOCS FILES ARE CHANGED"
+  	touch runTestsForDocsChangeOnly
+  elif [ $CHANGED_UNIT_TESTS_AND_DOCS_ONLY == "True" ]
+  then
+  	echo "ONLY UNIT TEST FILES ARE DOCS FILES ARE CHANGED"
+  	touch runUnitTestsOnly
+  fi
 else
-	echo "files other than unit tests files and docs files are also changed"
+  echo "NO FILES ARE CHANGED"
 fi
