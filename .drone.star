@@ -1624,7 +1624,7 @@ def setupIntegrationWebApp():
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/setup-integration-web-app.sh {} {}".format(dir["server"], dir["web"]),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping setupIntegrationWebApp'; else bash -x tests/drone/setup-integration-web-app.sh {} {}; fi".format(dir["server"], dir["web"]),
         ],
         "volumes": [{
             "name": "configs",
@@ -1638,7 +1638,7 @@ def buildWeb():
         "image": "owncloudci/nodejs:14",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/build-web.sh {}".format(dir["web"]),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping buildWeb'; else bash -x tests/drone/build-web.sh {}; fi".format(dir["web"]),
         ],
         "volumes": [{
             "name": "configs",
@@ -1814,7 +1814,7 @@ def getSkeletonFiles():
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'installNPM getSkeletonFiles'; else git clone https://github.com/owncloud/testing.git /srv/app/testing; fi",
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping getSkeletonFiles'; else git clone https://github.com/owncloud/testing.git /srv/app/testing; fi",
         ],
         "volumes": [{
             "name": "gopath",
@@ -1850,7 +1850,7 @@ def setUpOauth2(forIntegrationApp):
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/setup-oauth2.sh {} {}".format(dir["server"], oidcURL),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping setup-oauth2'; else bash -x tests/drone/setup-oauth2.sh {} {}; fi".format(dir["server"], oidcURL),
         ],
     }]
 
@@ -1860,7 +1860,7 @@ def setupGraphapiOIdC():
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/setup-graph-api-oidc.sh {}".format(dir["server"]),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping setupGraphapiOIdC'; else bash -x tests/drone/setup-graph-api-oidc.sh {}; fi".format(dir["server"]),
         ],
     }]
 
@@ -2041,7 +2041,7 @@ def setupNotificationsAppForServer():
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/setup-notifications-app.sh {}".format(dir["server"]),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping setupNotificationsApp'; else bash -x tests/drone/setup-notifications-app.sh {}; fi".format(dir["server"]),
         ],
     }]
 
@@ -2051,7 +2051,7 @@ def setupServerAndAppsForIntegrationApp(logLevel):
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/setup-server-and-app.sh %s %s %s" % (dir["server"], logLevel, "builtInWeb"),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping server-setup'; else bash -x tests/drone/setup-server-and-app.sh %s %s %s; fi" % (dir["server"], logLevel, "builtInWeb"),
         ],
     }]
 
@@ -2061,7 +2061,7 @@ def setupServerAndApp(logLevel):
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/setup-server-and-app.sh %s %s" % (dir["server"], logLevel),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping server-setup'; else bash -x tests/drone/setup-server-and-app.sh %s %s; fi" % (dir["server"], logLevel),
         ],
     }]
 
@@ -2071,7 +2071,7 @@ def setupFedServerAndApp(logLevel):
         "image": "owncloudci/php:7.4",
         "pull": "always",
         "commands": [
-            "bash -x tests/drone/setup-fed-server-and-app.sh {} {}".format(dir["federated"], logLevel),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping server-setup'; else bash -x tests/drone/setup-fed-server-and-app.sh {} {}; fi".format(dir["federated"], logLevel),
         ],
     }]
 
@@ -2127,7 +2127,7 @@ def copyFilesForUpload():
             "path": "/filesForUpload",
         }],
         "commands": [
-            "bash -x tests/drone/copy-files-for-upload.sh {}".format(dir["web"]),
+            "if test -f runUnitTestsOnly || test -f runTestsForDocsChangeOnly; then echo 'skipping copyFilesForUpload'; else bash -x tests/drone/copy-files-for-upload.sh {}; fi".format(dir["web"]),
         ],
     }]
 
