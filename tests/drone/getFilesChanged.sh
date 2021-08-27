@@ -13,14 +13,14 @@ do
 		CHANGED_UNIT_TESTS_ONLY=False
 		break
 	fi
-	if ! echo "${DIFF}" | grep 'docs/.*'
+	if ! echo "${DIFF}" | grep -E '(docs/.*|changelog/.*)'
 	then
 		CHANGED_DOCS_ONLY=False
 		break
 	fi
 	if [ $CHANGED_UNIT_TESTS_ONLY == "False" && $CHANGED_DOCS_ONLY == "False" ]
 	then
-	 if ! echo "${DIFF}" | grep grep -E '(docs/.*|packages/.*/tests/.*)'
+	 if ! echo "${DIFF}" | grep -E '(docs/.*|changelog/.*|packages/.*/tests/.*)'
 	 then
 		 CHANGED_UNIT_TESTS_AND_DOCS_ONLY=False
 		 break
