@@ -42,7 +42,9 @@ export const getStore = function({
   selectedFiles = [],
   totalFilesSize = null,
   loginBackgroundImg = '',
-  loginLogo = ''
+  loginLogo = '',
+  slogan = null,
+  publicLinkPassword = null
 } = {}) {
   return createStore(Vuex.Store, {
     state: {
@@ -56,6 +58,9 @@ export const getStore = function({
           },
           logo: {
             login: loginLogo
+          },
+          general: {
+            slogan: slogan
           }
         },
         options: {
@@ -79,7 +84,9 @@ export const getStore = function({
           activeFilesCount: () => activeFilesCount,
           inProgress: () => inProgress,
           highlightedFile: () => highlightedFile,
-          currentFolder: () => currentFolder
+          pages: () => pages,
+          currentFolder: () => currentFolder,
+          publicLinkPassword: () => publicLinkPassword
         },
         mutations: {
           UPDATE_RESOURCE: (state, resource) => {
