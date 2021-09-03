@@ -4,6 +4,8 @@ import GetTextPlugin from 'vue-gettext'
 import Vuex from 'vuex'
 import DesignSystem from 'owncloud-design-system'
 import VueSelect from 'vue-select'
+import { roles } from '@files/tests/__fixtures__/collaborators.js'
+
 
 const localVue = createLocalVue()
 localVue.use(DesignSystem)
@@ -35,7 +37,6 @@ describe('Edit Collaborator', () => {
       const wrapper = getShallowMountedWrapper({ user: 'user0', collaborators: [] })
 
       await wrapper.setData({ errors: 'some error' })
-
       const errorMsg = wrapper.find(selectors.error)
       expect(errorMsg.exists()).toBeTruthy()
 
@@ -100,15 +101,17 @@ describe('Edit Collaborator', () => {
   })
 
   describe('Action Buttons', () => {
-    it('should render the cancel button', () => {
-      const wrapper = getShallowMountedWrapper({ user: 'user0' })
+    const wrapper = getShallowMountedWrapper({ user: 'user0' })
+
+    it.only('should render the cancel button', () => {
+      // const wrapper = getShallowMountedWrapper({ user: 'user0' })
       const cancelButton = wrapper.find(selectors.cancelButton)
       expect(cancelButton.exists()).toBe(true)
       expect(cancelButton.text()).toBe('Cancel')
     })
 
-    it('should render the save button', () => {
-      const wrapper = getShallowMountedWrapper({ user: 'user0' })
+    it.only('should render the save button', () => {
+      // const wrapper = getShallowMountedWrapper({ user: 'user0' })
       const saveButton = wrapper.find(selectors.saveButton)
       expect(saveButton.exists()).toBe(true)
       expect(saveButton.attributes().disabled).toBe('true')
@@ -162,7 +165,7 @@ describe('Edit Collaborator', () => {
   })
 })
 
-const buildCollaboratorsArray = (collaborator, idx) => {
+function buildCollaboratorsArray(collaborator, idx) {
   let {
     username,
     fileOwner,
@@ -189,7 +192,7 @@ const buildCollaboratorsArray = (collaborator, idx) => {
   }
 }
 
-const storeOptions = data => {
+function storeOptions(data) {
   let { user, owner } = data
   if (!owner) {
     owner = user
@@ -239,29 +242,13 @@ const storeOptions = data => {
   return storeOpts
 }
 
-const roles = {
-  viewer: {
-    description: 'Download, preview and share',
-    label: 'Viewer',
-    name: 'viewer',
-    permissions: ['read', 'share']
-  },
-
-  editor: {
-    description: 'Download, preview, eidtand share',
-    label: 'Editor',
-    name: 'editor',
-    permissions: ['read', 'write', 'upload', 'share']
+function userObj(name) {
+  const displayNames = {
+    user0: 'User Zero',
+    user1: 'User One',
+    user2: 'User Two'
   }
-}
 
-const displayNames = {
-  user0: 'User Zero',
-  user1: 'User One',
-  user2: 'User Two'
-}
-
-const userObj = name => {
   return {
     id: name,
     additionalInfo: null,
@@ -271,7 +258,7 @@ const userObj = name => {
   }
 }
 
-const getMountOptions = data => {
+function getMountOptions(data) {
   const collaborator = buildCollaboratorsArray(
     {
       fileOwner: 'user0',
