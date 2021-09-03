@@ -148,7 +148,7 @@ export default {
     },
 
     expirationSupported() {
-      return this.userExpirationDate.enabled && this.groupExpirationDate.enabled
+      return this.userExpirationDate && this.groupExpirationDate
     },
 
     defaultExpirationDateSet() {

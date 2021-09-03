@@ -6,7 +6,6 @@ import DesignSystem from 'owncloud-design-system'
 import VueSelect from 'vue-select'
 import { roles } from '@files/tests/__fixtures__/collaborators.js'
 
-
 const localVue = createLocalVue()
 localVue.use(DesignSystem)
 localVue.use(Vuex)
@@ -101,17 +100,15 @@ describe('Edit Collaborator', () => {
   })
 
   describe('Action Buttons', () => {
-    const wrapper = getShallowMountedWrapper({ user: 'user0' })
-
-    it.only('should render the cancel button', () => {
-      // const wrapper = getShallowMountedWrapper({ user: 'user0' })
+    it('should render the cancel button', () => {
+      const wrapper = getShallowMountedWrapper({ user: 'user0' })
       const cancelButton = wrapper.find(selectors.cancelButton)
       expect(cancelButton.exists()).toBe(true)
       expect(cancelButton.text()).toBe('Cancel')
     })
 
-    it.only('should render the save button', () => {
-      // const wrapper = getShallowMountedWrapper({ user: 'user0' })
+    it('should render the save button', () => {
+      const wrapper = getShallowMountedWrapper({ user: 'user0' })
       const saveButton = wrapper.find(selectors.saveButton)
       expect(saveButton.exists()).toBe(true)
       expect(saveButton.attributes().disabled).toBe('true')
@@ -198,7 +195,7 @@ function storeOptions(data) {
     owner = user
   }
 
-  const storeOpts = {
+  return {
     state: {
       user: userObj(user)
     },
@@ -238,8 +235,6 @@ function storeOptions(data) {
       }
     }
   }
-
-  return storeOpts
 }
 
 function userObj(name) {
@@ -253,8 +248,7 @@ function userObj(name) {
     id: name,
     additionalInfo: null,
     name,
-    displayName: displayNames[name],
-    displayname: displayNames[name] // FIXME: some values use different property name for display name
+    displayName: displayNames[name]
   }
 }
 

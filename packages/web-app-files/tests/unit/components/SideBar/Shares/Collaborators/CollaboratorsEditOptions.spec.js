@@ -243,7 +243,7 @@ function userObj(name) {
     id: name,
     additionalInfo: null,
     name,
-    displayName: displayNames[name],
+    displayName: displayNames[name]
   }
 }
 
