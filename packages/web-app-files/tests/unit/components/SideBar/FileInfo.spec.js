@@ -38,74 +38,37 @@ function getWrapper(
 }
 
 const selectors = {
-  fileNameItem: '.file_info h2',
-  favoritesButton: '.file_info button.file_info__favorite',
-  fileDescription: '.file_info__body div'
+  favoritesButton: '.file_info button.file_info__favorite'
 }
 
-describe('SideBar', () => {
-  describe('when the user on files personal route', () => {
-    it('should show file name', () => {
-      const wrapper = getWrapper(filesPersonalRoute, {
-        filename: 'testfile',
-        extension: 'jpg'
+describe('FileInfo', () => {
+  describe.each([[filesPersonalRoute], [filesPublicRoute]])(
+    'FileInfo Components on %s routes',
+    route => {
+      it.each([
+        [{ filename: 'testfile', extension: 'txt', type: 'file' }],
+        [{ filename: 'test-file', extension: 'drawio', type: 'file' }],
+        [{ filename: 'testfolder', extension: '', type: 'folder' }]
+      ])('should show the fileinfo correctly', data => {
+        const wrapper = getWrapper(route, data)
+
+        expect(wrapper).toMatchSnapshot()
       })
 
-      const fileName = wrapper.find(selectors.fileNameItem)
-      expect(fileName.isVisible()).toBeTruthy()
-      expect(fileName.text()).toBe('testfile.jpg')
-    })
+      it('should call the favorite trigger when button is clicked', async () => {
+        const wrapper = getWrapper(route, {
+          filename: 'testfile',
+          extension: 'jpg'
+        })
 
-    it('should show favorites button in files personal page', () => {
-      const wrapper = getWrapper(filesPersonalRoute, {
-        filename: 'testfile',
-        extension: 'jpg'
+        const favoriteTrigger = jest.fn()
+        wrapper.vm.markFavorite = favoriteTrigger
+        const favoritesButton = wrapper.find(selectors.favoritesButton)
+        await favoritesButton.trigger('click.native.stop')
+        expect(favoriteTrigger).toHaveBeenCalledTimes(1)
       })
-
-      const favoritesButton = wrapper.find(selectors.favoritesButton)
-      expect(favoritesButton.exists()).toBeTruthy()
-    })
-
-    it('should not show favorites button in public link page', () => {
-      const wrapper = getWrapper(filesPublicRoute, {
-        filename: 'testfile',
-        extension: 'jpg',
-        publicLink: true
-      })
-
-      const favoritesButton = wrapper.find(selectors.favoritesButton)
-      expect(favoritesButton.exists()).toBeFalsy()
-    })
-
-    it('should call the favorite trigger when button is clicked', async () => {
-      const wrapper = getWrapper(filesPersonalRoute, {
-        filename: 'testfile',
-        extension: 'jpg'
-      })
-
-      const favoriteTrigger = jest.fn()
-      wrapper.vm.markFavorite = favoriteTrigger
-      const favoritesButton = wrapper.find(selectors.favoritesButton)
-      await favoritesButton.trigger('click.native.stop')
-      expect(favoriteTrigger).toHaveBeenCalledTimes(1)
-    })
-
-    it('should show file size and modified date', () => {
-      const wrapper = getWrapper(filesPersonalRoute, {
-        filename: 'testfile',
-        extension: 'jpg'
-      })
-
-      const fileDescription = wrapper.find(selectors.fileDescription)
-      expect(fileDescription.exists()).toBeTruthy()
-      const description = fileDescription.text()
-      const fileSize = description.split(',')[0].trim()
-      const fileModified = description.split(',')[1].trim()
-
-      expect(fileSize).toBe('163 B')
-      expect(fileModified).toBe('2 days ago')
-    })
-  })
+    }
+  )
 })
 
 function getResource({ filename, extension, type }) {
