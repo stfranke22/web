@@ -7,6 +7,8 @@ import VueSelect from 'vue-select'
 import RoleItem from '@files/src/components/SideBar/Shared/RoleItem.vue'
 import { DateTime } from 'luxon'
 
+import { roles } from '@files/tests/__fixtures__/collaborators.js'
+
 const localVue = createLocalVue()
 localVue.use(DesignSystem)
 localVue.use(Vuex)
@@ -20,17 +22,16 @@ localVue.use(GetTextPlugin, {
 const selectors = {
   roleLabel: 'label',
   roleSelect: '.files-collaborators-role-button-wrapper',
-
   expirationDate: '#files-collaborators-collaborator-expiration-input'
 }
 
 describe('Collaborator Edit Options', () => {
   describe('Role Selection', () => {
-    it('should show the label for the role', () => {
-      const wrapper = getMountedWrapper({
-        user: 'user0'
-      })
+    let wrapper = getMountedWrapper({
+      user: 'user0'
+    })
 
+    it('should show the label for the role', () => {
       const roleLabel = wrapper.find(selectors.roleLabel)
 
       expect(roleLabel.exists()).toBeTruthy()
@@ -43,10 +44,6 @@ describe('Collaborator Edit Options', () => {
     })
 
     it('should render default role in the select input if no value is set to the role prop', () => {
-      const wrapper = getMountedWrapper({
-        user: 'user0'
-      })
-
       const roleSelect = wrapper.findComponent(VueSelect)
 
       expect(roleSelect.exists()).toBeTruthy()
@@ -60,7 +57,7 @@ describe('Collaborator Edit Options', () => {
     })
 
     it('should set the role according to the provided prop', () => {
-      const wrapper = getMountedWrapper({
+      wrapper = getMountedWrapper({
         user: 'user0',
         role: 'editor'
       })
@@ -71,7 +68,7 @@ describe('Collaborator Edit Options', () => {
     })
 
     it('should change the role when new role is selected', async () => {
-      const wrapper = getMountedWrapper({
+      wrapper = getMountedWrapper({
         user: 'user0',
         role: 'viewer'
       })
@@ -167,7 +164,7 @@ describe('Collaborator Edit Options', () => {
       expirationDate.setDate(expirationDate.getDate() + 10)
       // set expected expire time to the end of the day
       expirationDate.setHours(23, 59, 59, 999)
-      // FIXME: timezone offset is manually added in thecode
+      // FIXME: timezone offset is manually added in the code
       expirationDate.setMinutes(expirationDate.getMinutes() + expirationDate.getTimezoneOffset())
 
       const wrapper = getMountedWrapper({
@@ -189,11 +186,8 @@ describe('Collaborator Edit Options', () => {
   })
 })
 
-const storeOptions = data => {
-  let { user, owner, shareCapabilities } = data
-  if (!owner) {
-    owner = user
-  }
+function storeOptions(data) {
+  let { user, shareCapabilities } = data
 
   if (!shareCapabilities) {
     shareCapabilities = {
@@ -212,7 +206,7 @@ const storeOptions = data => {
     }
   }
 
-  const storeOpts = {
+  return {
     state: {
       user: userObj(user)
     },
@@ -236,49 +230,20 @@ const storeOptions = data => {
       }
     }
   }
-  return storeOpts
 }
 
-const roles = {
-  viewer: {
-    description: 'Download, preview and share',
-    label: 'Viewer',
-    name: 'viewer',
-    permissions: ['read', 'share']
-  },
-
-  editor: {
-    description: 'Edit, download, preview and share',
-    label: 'Editor',
-    name: 'editor',
-    permissions: ['read', 'update', 'share']
-  },
-
-  advancedPermissions: {
-    name: 'advancedRole',
-    label: 'Advanced permissions',
-    description: 'Set detailed permissions',
-    permissions: ['read'],
-    additionalPermissions: {
-      update: { name: 'update', description: 'Allow editing' },
-      share: { name: 'share', description: 'Allow sharing' }
-    }
+function userObj(name) {
+  const displayNames = {
+    user0: 'User Zero',
+    user1: 'User One',
+    user2: 'User Two'
   }
-}
 
-const displayNames = {
-  user0: 'User Zero',
-  user1: 'User One',
-  user2: 'User Two'
-}
-
-const userObj = name => {
   return {
     id: name,
     additionalInfo: null,
     name,
     displayName: displayNames[name],
-    displayname: displayNames[name] // FIXME: some values use different property name for display name
   }
 }
 
