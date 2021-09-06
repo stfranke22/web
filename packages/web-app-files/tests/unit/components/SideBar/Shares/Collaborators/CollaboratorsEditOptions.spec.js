@@ -87,16 +87,8 @@ describe('Collaborator Edit Options', () => {
       const wrapper = getShallowMountedWrapper({
         user: 'user0',
         shareCapabilities: {
-          user: {
-            expire_date: {
-              enabled: false
-            }
-          },
-          group: {
-            expire_date: {
-              enabled: false
-            }
-          }
+          user: {},
+          group: {},
         }
       })
 
