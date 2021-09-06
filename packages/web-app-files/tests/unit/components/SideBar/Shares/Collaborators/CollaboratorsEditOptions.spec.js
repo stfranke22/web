@@ -88,7 +88,7 @@ describe('Collaborator Edit Options', () => {
         user: 'user0',
         shareCapabilities: {
           user: {},
-          group: {},
+          group: {}
         }
       })
 
