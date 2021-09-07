@@ -22,6 +22,7 @@ config = {
     "yarnlint": True,
     "acceptance": {
         "webUI": {
+            "skip": False,
             "type": FULL,
             "debugSuites": ["webUIFilesList"],
             "suites": {
@@ -144,7 +145,6 @@ config = {
         },
         "webUINotification": {
             "type": NOTIFICATIONS,
-            "skip": True,
             "suites": {
                 "oC10NotificationBasic": [
                     "webUINotifications",
@@ -164,7 +164,6 @@ config = {
         },
         "webUIFederation": {
             "type": FEDERATED,
-            "skip": True,
             "suites": {
                 "webUISharingExternal": "oC10SharingExternal",
                 "webUISharingExternalToRoot": "oC10SharingExternalRoot",
@@ -179,7 +178,6 @@ config = {
         },
         "webUI-XGA-Notifications": {
             "type": NOTIFICATIONS,
-            "skip": True,
             "suites": {
                 "oC10XGAPortraitNotifications": [
                     "webUINotifications",
@@ -196,10 +194,12 @@ config = {
         },
         "webUI-XGA": {
             "type": FULL,
-            "skip": True,
             "suites": {
+                "oC10XGAPortrait1": [
                     "webUIAccount",
                     "webUICreateFilesFolders",
+                    "webUIDeleteFilesFolders",
+                    "webUIFavorites",
                     "webUIFiles",
                     "webUIFilesActionMenu",
                     "webUIFilesCopy",
@@ -273,7 +273,6 @@ config = {
         },
         "webUI-Notifications-iPhone": {
             "type": NOTIFICATIONS,
-            "skip": True,
             "suites": {
                 "oC10iPhoneNotifications": [
                     "webUINotifications",
@@ -290,7 +289,6 @@ config = {
         },
         "webUI-iPhone": {
             "type": FULL,
-            "skip": True,
             "suites": {
                 "oC10iPhone1": [
                     "webUIAccount",
@@ -370,7 +368,11 @@ config = {
         },
         "webUI-ocis": {
             "type": FULL,
-            "debugSuites": {"webUIOCISFilesList": "webUIFilesList"},
+            "skip": False,
+            "debugSuites": {"webUIFilesList": "oCISFilesList"},
+            "suites": {
+                "oCISBasic": [
+                    "webUILogin",
                     "webUINotifications",
                     "webUIPrivateLinks",
                     "webUIPreview",
@@ -1080,7 +1082,7 @@ def acceptance(ctx):
         "visualTesting": False,
         "openIdConnect": False,
         "oc10IntegrationAppIncluded": False,
-        "skip": False,
+        "skip": True,
         "debugSuites": [],
         "earlyFail": True,
     }
