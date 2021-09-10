@@ -17,16 +17,12 @@ localVue.use(GetTextPlugin, {
 const selectors = {
   error: '.oc-files-collaborators-collaborator-error-alert',
   editHint: '#collaborator-edit-hint',
-
   collaborator: 'collaborator-stub',
   editOptions: 'collaborators-edit-options-stub',
-
   cancelButton: '.files-collaborators-collaborator-cancel',
   saveButton: '#files-collaborators-collaborator-save-share-button',
-
   rolebutton: '#files-collaborators-role-button',
   expirationInput: '#files-collaborators-collaborator-expiration-input',
-
   savingInProgress: 'oc-spinner-stub[arialabel="Saving Share"]'
 }
 
@@ -39,7 +35,7 @@ describe('Edit Collaborator', () => {
       const errorMsg = wrapper.find(selectors.error)
       expect(errorMsg.exists()).toBeTruthy()
 
-      expect(errorMsg.text()).toBe('some error')
+      expect(errorMsg).toMatchSnapshot()
     })
 
     it('should not display errors when the form has no errors', () => {
@@ -57,7 +53,7 @@ describe('Edit Collaborator', () => {
       const editHint = wrapper.find(selectors.editHint)
       expect(editHint.exists()).toBe(true)
 
-      expect(editHint.text()).toBe('Editing share with User One')
+      expect(editHint).toMatchSnapshot()
     })
 
     it('should render current collaborator', () => {
@@ -104,7 +100,7 @@ describe('Edit Collaborator', () => {
       const wrapper = getShallowMountedWrapper({ user: 'user0' })
       const cancelButton = wrapper.find(selectors.cancelButton)
       expect(cancelButton.exists()).toBe(true)
-      expect(cancelButton.text()).toBe('Cancel')
+      expect(cancelButton).toMatchSnapshot()
     })
 
     it('should render the save button', () => {
@@ -112,7 +108,7 @@ describe('Edit Collaborator', () => {
       const saveButton = wrapper.find(selectors.saveButton)
       expect(saveButton.exists()).toBe(true)
       expect(saveButton.attributes().disabled).toBe('true')
-      expect(saveButton.text()).toBe('Save')
+      expect(saveButton).toMatchSnapshot()
     })
 
     it('cancel button should work', async () => {
@@ -126,19 +122,32 @@ describe('Edit Collaborator', () => {
       expect(cancelTrigger).toHaveBeenCalledTimes(1)
     })
 
-    it('save button should work', async () => {
+    it('should set viewer as the default role', () => {
+      const wrapper = getMountedWrapper({ user: 'user0' })
+
+      const roleSelect = wrapper.findComponent(VueSelect)
+      expect(roleSelect.props('value')).toMatchObject(roles.viewer)
+      expect(wrapper.vm.selectedRole).toMatchObject(roles.viewer)
+    })
+
+    it('should set correct role when role is changed', async () => {
+      const wrapper = getMountedWrapper({ user: 'user0' })
+
+      const roleSelect = wrapper.findComponent(VueSelect)
+      await roleSelect.vm.select(roles.editor)
+      expect(roleSelect.props('value')).toMatchObject(roles.editor)
+      expect(wrapper.vm.selectedRole).toMatchObject(roles.editor)
+    })
+
+    it('should call the "$_ocCollaborators_saveChanges" when save button is clicked', async () => {
       const saveTrigger = jest.spyOn(Editcollaborator.methods, '$_ocCollaborators_saveChanges')
 
       const wrapper = getMountedWrapper({ user: 'user0' })
       const saveButton = wrapper.find(selectors.saveButton)
 
       const roleSelect = wrapper.findComponent(VueSelect)
-      expect(roleSelect.props('value')).toMatchObject(roles.viewer)
-      expect(wrapper.vm.selectedRole).toMatchObject(roles.viewer)
 
       await roleSelect.vm.select(roles.editor)
-      expect(roleSelect.props('value')).toMatchObject(roles.editor)
-      expect(wrapper.vm.selectedRole).toMatchObject(roles.editor)
 
       expect(saveTrigger).not.toHaveBeenCalled()
       await saveButton.trigger('click')

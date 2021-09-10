@@ -35,12 +35,8 @@ describe('Collaborator Edit Options', () => {
       const roleLabel = wrapper.find(selectors.roleLabel)
 
       expect(roleLabel.exists()).toBeTruthy()
-      expect(roleLabel.attributes()).toMatchObject({
-        class: 'oc-label',
-        for: 'files-collaborators-role-button'
-      })
 
-      expect(roleLabel.text()).toBe('Role')
+      expect(roleLabel.text()).toMatchSnapshot()
     })
 
     it('should render default role in the select input if no value is set to the role prop', () => {
