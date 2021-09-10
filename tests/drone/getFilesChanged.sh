@@ -5,12 +5,12 @@ CHANGED_DOCS_ONLY=True
 CHANGED_UNIT_TESTS_AND_DOCS_ONLY=True
 
 DIFFS=$(git diff origin/master --name-only)
-DOCS_ONLY_CHANGES=$(echo "$DIFFS" | grep -E '(docs/.*|changelog/.*)')
-UNIT_TESTS_CHANGES=$(echo "$DIFFS" | grep 'packages/.*/tests/.*')
-DOCS_AND_UNIT_TESTS_ONLY_CHANGES=$(echo "$DIFFS" | grep -E '(docs/.*|changelog/.*|packages/.*/tests/.*)')
+DOCS_ONLY_CHANGES=$(echo "$DIFFS" | grep -E '(^docs/.*|^changelog/.*)')
+UNIT_TESTS_ONLY_CHANGES=$(echo "$DIFFS" | grep '^packages/.*/tests/.*')
+DOCS_AND_UNIT_TESTS_ONLY_CHANGES=$(echo "$DIFFS" | grep -E '(^docs/.*|^changelog/.*|^packages/.*/tests/.*)')
 
 changesExceptDocsChanges=$(echo ${DIFFS[@]} ${DOCS_ONLY_CHANGES[@]} | tr ' ' '\n' | sort | uniq -u)
-changesExceptUnitTestsChanges=$(echo ${DIFFS[@]} ${UNIT_TESTS_CHANGES[@]} | tr ' ' '\n' | sort | uniq -u)
+changesExceptUnitTestsChanges=$(echo ${DIFFS[@]} ${UNIT_TESTS_ONLY_CHANGES[@]} | tr ' ' '\n' | sort | uniq -u)
 changesExceptUnitTestsAndDocsChanges=$(echo ${DIFFS[@]} ${DOCS_AND_UNIT_TESTS_ONLY_CHANGES[@]} | tr ' ' '\n' | sort | uniq -u)
 
 
